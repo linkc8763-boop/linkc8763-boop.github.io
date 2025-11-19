@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>國立中正大學 115學年度 碩士班甄試 成績查詢結果</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-container">
+    <div class="card">
+      <h1 class="site-title">
+        國立中正大學 115學年度<br />
+        碩士班甄試 成績查詢結果
+      </h1>
+
+      <div id="result-content" class="result-wrapper">
+        <div class="info-table-wrapper">
+          <table class="info-table">
+            <tbody>
+              <tr>
+                <th>報考系組</th>
+                <td id="departmentCell"></td>
+              </tr>
+              <tr>
+                <th>姓名</th>
+                <td id="nameCell"></td>
+              </tr>
+              <tr>
+                <th>身分證字號</th>
+                <td id="idNumberCell"></td>
+              </tr>
+              <tr>
+                <th>准考證號碼</th>
+                <td id="examNumberCell"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="score-table-wrapper">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th class="col-item">考試項目</th>
+                <th class="col-score">成績</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>資料審查</td>
+                <td id="documentScoreCell"></td>
+              </tr>
+              <tr>
+                <td>面試</td>
+                <td id="interviewScoreCell"></td>
+              </tr>
+              <tr>
+                <td class="result-label">錄取結果</td>
+                <td id="admissionResultCell" class="result-value"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="error-message" class="error-message" hidden>
+        查無成績資料，請由首頁重新查詢。
+      </div>
+
+      <div class="result-actions">
+        <a href="index.html" class="secondary-button">回查詢頁面</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search)
+
+      if (!params.has("idNumber") || !params.has("examNumber")) {
+        document.getElementById("result-content").hidden = true
+        document.getElementById("error-message").hidden = false
+        return
+      }
+
+      const get = (key) => params.get(key) || ""
+
+      document.getElementById("departmentCell").textContent = get("department")
+      document.getElementById("nameCell").textContent = get("name")
+      document.getElementById("idNumberCell").textContent = get("idNumber")
+      document.getElementById("examNumberCell").textContent = get("examNumber")
+      document.getElementById("documentScoreCell").textContent =
+        get("documentScore")
+      document.getElementById("interviewScoreCell").textContent =
+        get("interviewScore")
+      document.getElementById("admissionResultCell").textContent =
+        get("admissionResult")
+    })
+  </script>
+</body>
+</html>

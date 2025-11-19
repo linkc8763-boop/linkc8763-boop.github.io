@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>國立中正大學 115學年度 碩士班甄試 成績查詢</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-container">
+    <div class="card">
+      <h1 class="site-title">
+        國立中正大學 115學年度<br />
+        碩士班甄試 成績查詢
+      </h1>
+
+      <form id="search-form" class="form">
+        <div class="form-group">
+          <label for="idNumber">身分證字號：</label>
+          <input
+            type="text"
+            id="idNumber"
+            name="idNumber"
+            maxlength="10"
+            autocomplete="off"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="examNumber">准考證號碼：</label>
+          <input
+            type="text"
+            id="examNumber"
+            name="examNumber"
+            autocomplete="off"
+            required
+          />
+        </div>
+
+        <div class="form-group captcha-group">
+          <label for="captchaInput">圖形驗證碼：</label>
+          <div class="captcha-row">
+            <input
+              type="text"
+              id="captchaInput"
+              name="captchaInput"
+              maxlength="4"
+              autocomplete="off"
+              required
+            />
+            <div class="captcha-display" id="captchaDisplay"></div>
+            <button type="button" id="refreshCaptcha" class="secondary-button">
+              重新產生
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="primary-button">查詢</button>
+        </div>
+
+        <p class="hint">
+          ※ 成績資料僅供查詢參考，實際錄取結果以本系公告為準。
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentCaptcha = ""
+
+    function generateCaptcha() {
+      currentCaptcha = ""
+      for (let i = 0; i < 4; i++) {
+        currentCaptcha += Math.floor(Math.random() * 10)
+      }
+      const display = document.getElementById("captchaDisplay")
+      if (display) {
+        display.textContent = currentCaptcha
+      }
+    }
+
+    async function fetchData() {
+      const res = await fetch("data.json", { cache: "no-cache" })
+      if (!res.ok) {
+        throw new Error("無法載入成績資料")
+      }
+      return await res.json()
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      generateCaptcha()
+
+      document
+        .getElementById("refreshCaptcha")
+        .addEventListener("click", () => {
+          generateCaptcha()
+          const input = document.getElementById("captchaInput")
+          if (input) input.value = ""
+          input?.focus()
+        })
+
+      document
+        .getElementById("search-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault()
+
+          const idNumber = document
+            .getElementById("idNumber")
+            .value.trim()
+            .toUpperCase()
+          const examNumber = document
+            .getElementById("examNumber")
+            .value.trim()
+          const captchaInput = document
+            .getElementById("captchaInput")
+            .value.trim()
+
+          if (captchaInput !== currentCaptcha) {
+            alert("圖形驗證碼錯誤，請重新輸入。")
+            generateCaptcha()
+            document.getElementById("captchaInput").value = ""
+            document.getElementById("captchaInput").focus()
+            return
+          }
+
+          let data
+          try {
+            data = await fetchData()
+          } catch (err) {
+            alert(err.message || "成績資料載入失敗")
+            return
+          }
+
+          const record = data.find(
+            (item) =>
+              item.idNumber.toUpperCase() === idNumber &&
+              item.examNumber.trim() === examNumber
+          )
+
+          if (!record) {
+            alert("查無此資料，請確認身分證字號及准考證號碼是否正確。")
+            return
+          }
+
+          const params = new URLSearchParams()
+          params.set("idNumber", record.idNumber)
+          params.set("examNumber", record.examNumber)
+          params.set("department", record.department)
+          params.set("name", record.name)
+          params.set("documentScore", record.documentScore)
+          params.set("interviewScore", record.interviewScore)
+          params.set("admissionResult", record.admissionResult)
+
+          window.location.href = "result.html?" + params.toString()
+        })
+    })
+  </script>
+</body>
+</html>
