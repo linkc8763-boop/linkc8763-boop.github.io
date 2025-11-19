@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>國立中正大學 115學年度 碩士班甄試 成績查詢結果</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="result-container">
+<h1>國立中正大學 115學年度<br>碩士班甄試 成績查詢結果</h1>
+
+<table class="info-table">
+<tr><th>報考系組</th><td>電機工程研究所（計算機工程組）</td></tr>
+<tr><th>姓名</th><td id="name">—</td></tr>
+<tr><th>身分證字號</th><td id="idNumber"></td></tr>
+<tr><th>准考證號碼</th><td id="examNumber"></td></tr>
+</table>
+
+<table class="score-table">
+<tr><th>考試項目</th><th>成績</th></tr>
+<tr><td>資料審查</td><td id="reviewScore"></td></tr>
+<tr><td>面試</td><td id="interviewScore"></td></tr>
+<tr><td>錄取結果</td><td id="finalResult"></td></tr>
+</table>
+</div>
+
+<script>
+const p=new URLSearchParams(location.search);
+const id=p.get("id");
+const exam=p.get("exam");
+
+fetch("data.json").then(r=>r.json()).then(d=>{
+ let f=d.find(x=>x.id===id && x.exam===exam);
+ if(!f){
+   document.body.innerHTML="<h2 style='text-align:center;margin-top:80px;'>查無資料</h2>";
+   return;
+ }
+ document.getElementById("idNumber").innerText=f.id;
+ document.getElementById("examNumber").innerText=f.exam;
+ document.getElementById("reviewScore").innerText=f.review;
+ document.getElementById("interviewScore").innerText=f.interview;
+ document.getElementById("finalResult").innerText=f.result;
+ document.getElementById("name").innerText=f.name || "—";
+});
+</script>
+
+</body>
+</html>
