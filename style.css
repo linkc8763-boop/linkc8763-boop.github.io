@@ -1,0 +1,123 @@
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
+    "PingFang TC", "Microsoft JhengHei", sans-serif;
+  color: #222;
+  background-color: #ffffff;
+}
+
+/* 浮水印背景（只在有 watermark 的頁面上顯示） */
+body.watermark::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: url("logo.png");
+  background-repeat: repeat;
+  background-size: 320px 320px;   /* 校徽縮小 */
+  opacity: 0.08;                 /* 非常淡，但看得到 */
+  transform: rotate(-12deg);
+  transform-origin: center;
+}
+
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.card {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  padding: 32px 24px 28px;
+}
+
+.site-title {
+  text-align: center;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: #005bac;
+  margin: 0 0 24px;
+  font-weight: 700;
+}
+
+.form { margin-top: 8px; }
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem;
+}
+.form-group input {
+  width: 100%; padding: 8px 10px; border-radius: 4px; border: 1px solid #c9d3e5; font-size: 0.95rem;
+}
+.form-group input:focus {
+  outline: none; border-color: #005bac; box-shadow: 0 0 0 2px rgba(0, 91, 172, 0.12);
+}
+
+.captcha-group .captcha-row { display:flex; align-items:center; gap:8px; }
+.captcha-display {
+  min-width:72px; padding:8px 10px; text-align:center; font-family:"Courier New", monospace;
+  background:#f0f4ff; border-radius:4px; border:1px solid #c9d3e5; letter-spacing:2px; font-weight:600;
+}
+
+.form-actions { margin-top:8px; text-align:center; }
+.primary-button, .secondary-button {
+  display:inline-block; border:none; border-radius:4px; padding:8px 20px; font-size:0.95rem; cursor:pointer; text-decoration:none;
+}
+.primary-button { background-color:#0072e3; color:#fff; }
+.primary-button:hover { background-color:#005bb5; }
+.secondary-button { background-color:#fff; color:#005bac; border:1px solid #c9d3e5; }
+.secondary-button:hover { background-color:#f3f6ff; }
+
+.hint { margin-top:12px; font-size:0.82rem; color:#555; text-align:left; }
+
+.result-wrapper { display:flex; flex-direction:column; gap:20px; }
+.info-table, .score-table {
+  width:100%; border-collapse:collapse; font-size:0.92rem;
+}
+.info-table th, .info-table td, .score-table th, .score-table td {
+  border:1px solid #c9d3e5; padding:10px 12px;
+}
+.info-table th {
+  width:24%; background-color:#cfe2ff; text-align:center; font-weight:600;
+}
+.score-table thead th {
+  background-color:#9cc4ff; text-align:center; font-weight:600;
+}
+.score-table tbody td { background:#fff; text-align:center; }
+.score-table .result-label { font-weight:600; background:#e3efff; }
+.score-table .result-value { font-weight:700; color:#b40a0a; }
+
+.ranking-link-wrapper { text-align:center; margin-top:8px; }
+.ranking-link { color:#004b9b; font-weight:700; text-decoration:underline; font-size:1rem; }
+.ranking-link:hover { color:#003a78; }
+
+.result-actions { margin-top:20px; text-align:center; }
+.error-message { margin-top:8px; color:#b40a0a; text-align:center; font-size:0.9rem; }
+
+/* Ranking page (純白背景、無浮水印) */
+body.ranking-page { background:#fff; }
+.ranking-container {
+  max-width: 820px; margin: 40px auto; padding: 0 16px; color:#111;
+}
+.ranking-title, .ranking-subtitle, .ranking-dept { text-align:center; margin: 0.5rem 0; }
+.ranking-note { text-align:center; color:#444; margin-bottom:1rem; }
+.ranking-block { margin-top: 18px; }
+.ranking-block-title { font-weight:700; margin-bottom: 8px; }
+.ranking-list { line-height: 1.9; font-size: 1rem; }
+
+@media (min-width:768px){
+  .card{ padding:36px 40px 30px; }
+  .site-title{ font-size:1.5rem; }
+  .result-wrapper{ gap:24px; }
+}
